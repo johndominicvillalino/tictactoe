@@ -15,7 +15,6 @@ export const uploadStageData = (storageName,data) => {
    storageData = JSON.parse(storageData)
    storageData.push(data)
    storageData = JSON.stringify(storageData)
-
    storage.setItem(storageName,storageData)
 
 

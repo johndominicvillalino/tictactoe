@@ -73,26 +73,74 @@ export const calculateWin = (player) => {
     const currentMoves = getStorageData(checkPlayer);
 
    const board = [[],[],[]]
+
    
     currentMoves.forEach(e => {
         const v = e[0] -1
         const h = e[1]
         board[v].push(h)
     })
+   
 
     checkBoard()
 
     function checkBoard() {
-
+        // 123 / 321 combi
         board.forEach((e) => {
-            
             const sorted = e.sort()
             const joined = +sorted.join("")
-            console.log(joined)
-    
+            if(joined === 123) {
+                console.log(checkPlayer + ' won!')
+            }
+        })
+         
+       let winCombiOne = [board[0],board[1],board[2]];
+       winCombiOne = checkCombination(winCombiOne);
+        if(winCombiOne === 123) {
+            console.log(checkPlayer + ' won!')
+        }
+       
+         let firstLine = []
+         let secondLine = []
+         let thirdLine = []
+         board.forEach(e => {
+             if(e.includes('1')) {
+                firstLine.push(1)
+             }
+         })
+
+         board.forEach(e => {
+            if(e.includes('2')) {
+                secondLine.push(1)
+            }
+        })
+         board.forEach(e => {
+            if(e.includes('3')) {
+                thirdLine.push(1)
+            }
         })
 
+   
+
+        firstLine = checkCombination(firstLine)
+        secondLine = checkCombination(secondLine)
+        thirdLine = checkCombination(thirdLine)
+       
+
+
+        if(firstLine === 111 || secondLine === 111 || thirdLine === 111) {
+            console.log(checkPlayer + ' won!')
+        }
+
+        function checkCombination(boardCheck)  {
+            let winCombi  = boardCheck.sort()
+            winCombi = +winCombi.join("");
+            return winCombi;
+         }
+
+      
     }
+
 
     
 
