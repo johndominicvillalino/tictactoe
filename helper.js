@@ -1,152 +1,164 @@
+import { getStorageData, uploadStageData } from "./util.js";
 
-import {getStorageData,uploadStageData} from './util.js'
-
-const dom = document
-const storage = window.localStorage
+const dom = document;
+const storage = window.localStorage;
 
 export const createDivElements = () => {
-    const divsArr = []
-    for (let i = 0; i < 9; i++) {
-     const div = dom.createElement('div')
-        const exactPos = i+1;
-        let boxNum;
-        let boxPos; 
-        //cell ids anjd position
-        if(exactPos % 3 === 0) {
-            boxNum = 3
-        } else {
-            boxNum = exactPos % 3
-        }   
-        if(exactPos - boxNum === 0) {
-            boxPos = 1
-        } 
-        if(exactPos - boxNum === 3) {
-            boxPos = 2
-        } 
-        if(exactPos - boxNum === 6) {
-            boxPos = 3
-        } 
+  const divsArr = [];
+  for (let i = 0; i < 9; i++) {
+    const div = dom.createElement("div");
+    const exactPos = i + 1;
+    let boxNum;
+    let boxPos;
+    //cell ids anjd position
+    if (exactPos % 3 === 0) {
+      boxNum = 3;
+    } else {
+      boxNum = exactPos % 3;
+    }
+    if (exactPos - boxNum === 0) {
+      boxPos = 1;
+    }
+    if (exactPos - boxNum === 3) {
+      boxPos = 2;
+    }
+    if (exactPos - boxNum === 6) {
+      boxPos = 3;
+    }
 
-        div.setAttribute('id',`cell${i+1}`)
-        div.setAttribute('box',`${boxNum}`)
-        div.setAttribute('boxpos',`${boxPos}`)
-        
-        div.setAttribute('class','tictacCell')
-        divsArr.push(div)
-    }   
+    div.setAttribute("id", `cell${i + 1}`);
+    div.setAttribute("box", `${boxNum}`);
+    div.setAttribute("boxpos", `${boxPos}`);
 
-    storage.setItem('playerOne',JSON.stringify([]))
-    storage.setItem('playerTwo',JSON.stringify([]))
-    storage.setItem('board',JSON.stringify([]))
+    div.setAttribute("class", "tictacCell");
+    divsArr.push(div);
+  }
 
-    return divsArr;
-}
+  storage.setItem("playerOne", JSON.stringify([]));
+  storage.setItem("playerTwo", JSON.stringify([]));
+  storage.setItem("board", JSON.stringify([]));
 
-export const createDivContainer = (classes,id) => {
-     const div = dom.createElement('div')
-     div.setAttribute('class',classes)
-     div.setAttribute('id',id)
-     return div
-}
+  return divsArr;
+};
 
+export const createDivContainer = (classes, id) => {
+  const div = dom.createElement("div");
+  div.setAttribute("class", classes);
+  div.setAttribute("id", id);
+  return div;
+};
+
+export const createSpan = (classes, id) => {
+  const div = dom.createElement("span");
+  div.setAttribute("class", classes);
+  div.setAttribute("id", id);
+  return div;
+};
 
 export const playerMoves = (boxNum, player) => {
-    let storagePlayerUpdate; 
-    if(player === 1) {
-        storagePlayerUpdate = 'playerOne'
-    }else {
-        storagePlayerUpdate = 'playerTwo'
-    }
-    //upload playermoves
-    uploadStageData(storagePlayerUpdate,boxNum)
-    
-}
+  let storagePlayerUpdate;
+  if (player === 1) {
+    storagePlayerUpdate = "playerOne";
+  } else {
+    storagePlayerUpdate = "playerTwo";
+  }
+  //upload playermoves
+  uploadStageData(storagePlayerUpdate, boxNum);
+};
 
 export const calculateWin = (player) => {
-    
-    let checkPlayer; 
-    if(player === 1) {
-        checkPlayer = 'playerOne'
-    }else {
-        checkPlayer = 'playerTwo'
-    }
-    const currentMoves = getStorageData(checkPlayer);
+  let checkPlayer;
+  if (player === 1) {
+    checkPlayer = "playerOne";
+  } else {
+    checkPlayer = "playerTwo";
+  }
+  const currentMoves = getStorageData(checkPlayer);
 
-   const board = [[],[],[]]
+  const board = [[], [], []];
 
-   
-    currentMoves.forEach(e => {
-        const v = e[0] -1
-        const h = e[1]
-        board[v].push(h)
-    })
-   
+  currentMoves.forEach((e) => {
+    const v = e[0] - 1;
+    const h = e[1];
+    board[v].push(h);
+  });
 
-    checkBoard()
+  return checkBoard();
 
-    function checkBoard() {
-        // 123 / 321 combi
-        board.forEach((e) => {
-            const sorted = e.sort()
-            const joined = +sorted.join("")
-            if(joined === 123) {
-                console.log(checkPlayer + ' won!')
-            }
-        })
-         
-       let winCombiOne = [board[0],board[1],board[2]];
-       winCombiOne = checkCombination(winCombiOne);
-        if(winCombiOne === 123) {
-            console.log(checkPlayer + ' won!')
-        }
-       
-         let firstLine = []
-         let secondLine = []
-         let thirdLine = []
-         board.forEach(e => {
-             if(e.includes('1')) {
-                firstLine.push(1)
-             }
-         })
+  function checkBoard() {
+    const arr = [];
 
-         board.forEach(e => {
-            if(e.includes('2')) {
-                secondLine.push(1)
-            }
-        })
-         board.forEach(e => {
-            if(e.includes('3')) {
-                thirdLine.push(1)
-            }
-        })
+    // 123 / 321 combi
+    board.forEach((e) => {
+      const sorted = e.sort();
+      const joined = +sorted.join("");
+      if (joined === 123) {
+        arr.push(checkPlayer + " won!");
+      }
+    });
 
-   
-
-        firstLine = checkCombination(firstLine)
-        secondLine = checkCombination(secondLine)
-        thirdLine = checkCombination(thirdLine)
-       
-
-
-        if(firstLine === 111 || secondLine === 111 || thirdLine === 111) {
-            console.log(checkPlayer + ' won!')
-        }
-
-        function checkCombination(boardCheck)  {
-            let winCombi  = boardCheck.sort()
-            winCombi = +winCombi.join("");
-            return winCombi;
-         }
-
-      
+    if (arr[0]) {
+      return arr[0];
     }
 
-
     
+    let winCombiOne = [];
+
+   
+        if(board[0].includes('1') || board[0].includes('3')) {
+            winCombiOne.push(1)
+        }
+        if(board[1].includes('2')) {
+            winCombiOne.push(1)
+        }
+        if(board[2].includes('1') || board[2].includes('3')) {
+            winCombiOne.push(1)
+        }
 
 
-}
+
+    let firstLine = [];
+    let secondLine = [];
+    let thirdLine = [];
+    board.forEach((e) => {
+      if (e.includes("1")) {
+        firstLine.push(1);
+      }
+    });
+
+    board.forEach((e) => {
+      if (e.includes("2")) {
+        secondLine.push(1);
+      }
+    });
+
+    board.forEach((e) => {
+      if (e.includes("3")) {
+        thirdLine.push(1);
+      }
+    });
+
+    winCombiOne = checkCombination(winCombiOne)
+    firstLine = checkCombination(firstLine);
+    secondLine = checkCombination(secondLine);
+    thirdLine = checkCombination(thirdLine);
+
+
+
+    if (firstLine === 111 || secondLine === 111 || thirdLine === 111 || winCombiOne === 111) {
+      return checkPlayer + " won!";
+    }
 
 
 
 
+    function checkCombination(boardCheck) {
+      let winCombi = boardCheck.sort();
+      winCombi = winCombi.join("")
+      if (typeof winCombi !== "number") {
+        winCombi = +winCombi;
+      }
+      return winCombi;
+    }
+  }
+};
