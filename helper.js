@@ -103,19 +103,29 @@ export const calculateWin = (player) => {
 
     
     let winCombiOne = [];
+    let winCombiTwo = [];
 
-   
-        if(board[0].includes('1') || board[0].includes('3')) {
+        //1 2 3
+        if(board[0].includes('1')) {
             winCombiOne.push(1)
         }
         if(board[1].includes('2')) {
             winCombiOne.push(1)
         }
-        if(board[2].includes('1') || board[2].includes('3')) {
+        if( board[2].includes('3')) {
             winCombiOne.push(1)
         }
 
-
+        // 3 2 1 
+        if(board[0].includes('3')) {
+            winCombiTwo.push(1)
+        }
+        if(board[1].includes('2')) {
+            winCombiTwo.push(1)
+        }
+        if( board[2].includes('1')) {
+            winCombiTwo.push(1)
+        }
 
     let firstLine = [];
     let secondLine = [];
@@ -139,18 +149,14 @@ export const calculateWin = (player) => {
     });
 
     winCombiOne = checkCombination(winCombiOne)
+    winCombiTwo = checkCombination(winCombiTwo)
     firstLine = checkCombination(firstLine);
     secondLine = checkCombination(secondLine);
     thirdLine = checkCombination(thirdLine);
 
-
-
-    if (firstLine === 111 || secondLine === 111 || thirdLine === 111 || winCombiOne === 111) {
+    if (firstLine === 111 || secondLine === 111 || thirdLine === 111 || winCombiOne === 111 || winCombiTwo === 111) {
       return checkPlayer + " won!";
     }
-
-
-
 
     function checkCombination(boardCheck) {
       let winCombi = boardCheck.sort();
@@ -162,3 +168,10 @@ export const calculateWin = (player) => {
     }
   }
 };
+
+
+export const computerMove = () => {
+  dom.querySelectorAll('.tictacCell').forEach(e => {
+    console.log(e.textContent)
+  })
+}

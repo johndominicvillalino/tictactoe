@@ -2,7 +2,7 @@ const storage = window.localStorage
 
 
 export const getStorageData = (storageName) => {
-
+``
     let storageData = storage.getItem(storageName)
     storageData = JSON.parse(storageData)
     return storageData;
@@ -17,7 +17,5 @@ export const uploadStageData = (storageName,data) => {
    storageData = JSON.stringify(storageData)
    storage.setItem(storageName,storageData)
 
-
-   
 
 }

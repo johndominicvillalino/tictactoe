@@ -1,8 +1,9 @@
-import { createDivElements, createDivContainer,playerMoves,calculateWin,createSpan} from "./helper.js";
+import { createDivElements, createDivContainer,playerMoves,calculateWin,createSpan,computerMove} from "./helper.js";
 
 const dom = document;
 const root = dom.getElementById("root");
 let winner;
+let playWithComputer = false;
 
 //start on load
 window.addEventListener("load", () => {
@@ -35,6 +36,9 @@ window.addEventListener("load", () => {
   let player = 0;
   tictacCell.forEach((e) => {
     e.addEventListener("click", (el) => {
+
+
+
       let text;
       const boxNum = el.target.getAttribute("box");
       const boxPos = el.target.getAttribute("boxpos");
@@ -58,9 +62,10 @@ window.addEventListener("load", () => {
         if(winner) {
           return
         }
-       
+      
         dom.getElementById(el.target.id).textContent = text
         dom.getElementById(el.target.id).style.color = color
+        computerMove()
         playerMoves([boxPos,boxNum],player)
         const result = calculateWin(player)
         if(result) {
