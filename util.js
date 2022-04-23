@@ -2,7 +2,7 @@ const storage = window.localStorage
 
 
 export const getStorageData = (storageName) => {
-``
+
     let storageData = storage.getItem(storageName)
     storageData = JSON.parse(storageData)
     return storageData;

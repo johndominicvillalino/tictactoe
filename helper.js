@@ -1,7 +1,18 @@
 import { getStorageData, uploadStageData } from "./util.js";
+import { playerRestart } from './app.js'
 
 const dom = document;
 const storage = window.localStorage;
+
+export const createButtons = (id, buttonTxt = 'Button', classes) => {
+  const btn = dom.createElement('button')
+  btn.setAttribute('id', id)
+  btn.setAttribute('class', classes)
+  btn.textContent = buttonTxt
+
+  return btn
+}
+
 
 export const createDivElements = () => {
   const divsArr = [];
@@ -37,6 +48,11 @@ export const createDivElements = () => {
   storage.setItem("playerOne", JSON.stringify([]));
   storage.setItem("playerTwo", JSON.stringify([]));
   storage.setItem("board", JSON.stringify([]));
+  storage.setItem("history", JSON.stringify([]));
+  storage.setItem("historyForward", JSON.stringify([]));
+  storage.setItem("boardForward", JSON.stringify([]));
+  storage.setItem("move", 0);
+
 
   return divsArr;
 };
@@ -101,31 +117,31 @@ export const calculateWin = (player) => {
       return arr[0];
     }
 
-    
+
     let winCombiOne = [];
     let winCombiTwo = [];
 
-        //1 2 3
-        if(board[0].includes('1')) {
-            winCombiOne.push(1)
-        }
-        if(board[1].includes('2')) {
-            winCombiOne.push(1)
-        }
-        if( board[2].includes('3')) {
-            winCombiOne.push(1)
-        }
+    //1 2 3
+    if (board[0].includes('1')) {
+      winCombiOne.push(1)
+    }
+    if (board[1].includes('2')) {
+      winCombiOne.push(1)
+    }
+    if (board[2].includes('3')) {
+      winCombiOne.push(1)
+    }
 
-        // 3 2 1 
-        if(board[0].includes('3')) {
-            winCombiTwo.push(1)
-        }
-        if(board[1].includes('2')) {
-            winCombiTwo.push(1)
-        }
-        if( board[2].includes('1')) {
-            winCombiTwo.push(1)
-        }
+    // 3 2 1 
+    if (board[0].includes('3')) {
+      winCombiTwo.push(1)
+    }
+    if (board[1].includes('2')) {
+      winCombiTwo.push(1)
+    }
+    if (board[2].includes('1')) {
+      winCombiTwo.push(1)
+    }
 
     let firstLine = [];
     let secondLine = [];
@@ -170,8 +186,76 @@ export const calculateWin = (player) => {
 };
 
 
-export const computerMove = () => {
-  dom.querySelectorAll('.tictacCell').forEach(e => {
-    console.log(e.textContent)
-  })
+export const clickHistory = (e) => {
+  const len = e.id.length - 1
+  uploadStageData('board', e.id[len])
+
+}
+
+
+export const backForwardBtn = (btnClicked) => {
+
+  const title = dom.getElementById('title')
+  if(title.textContent.includes('Won')) {
+    return
+  }
+  let history = getStorageData('history')
+  let player = history[history.length -1]
+
+  let checkThis;
+  let holder;
+  if (player == 1) {
+    checkThis = getStorageData('playerOne')
+    holder = 'playerOne'
+  } else {
+    checkThis = getStorageData('playerTwo')
+    holder = 'playerTwo'
+  }
+  checkThis.pop()
+  checkThis = JSON.stringify(checkThis)
+  storage.setItem(holder,checkThis)
+
+
+  const cells = dom.querySelectorAll('.tictacCell')
+
+  const pos = history.length - 1
+
+  const board = getStorageData('board')
+  const cellNumtoClear = board[pos] -1
+  cells[cellNumtoClear].textContent = ''
+ 
+  playerRestart()
+
+  if(history.length == 1) {
+
+    dom.getElementById(btnClicked).style.visibility = 'hidden'
+    storage.setItem('move',0)
+    return;
+  }
+
+  const fwd = dom.getElementById('forwardBtn')
+  const historyFwd = getStorageData('historyForward')
+  if(historyFwd.length > 0) {
+    fwd.style.visibility = 'visible'
+  }
+
+  const updateMove = historyFwd[historyFwd.length -1];
+  
+  storage.setItem('move',updateMove)
+   
+
+
+
+}
+
+
+
+
+
+
+export const forwardBtnOnly = () => {
+
+
+console.log('test')
+
 }
