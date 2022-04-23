@@ -45,13 +45,8 @@ export const createDivElements = () => {
     divsArr.push(div);
   }
 
-  storage.setItem("playerOne", JSON.stringify([]));
-  storage.setItem("playerTwo", JSON.stringify([]));
-  storage.setItem("board", JSON.stringify([]));
-  storage.setItem("history", JSON.stringify([]));
-  storage.setItem("historyForward", JSON.stringify([]));
-  storage.setItem("boardForward", JSON.stringify([]));
-  storage.setItem("move", 0);
+  storageInit()
+
 
 
   return divsArr;
@@ -80,6 +75,7 @@ export const playerMoves = (boxNum, player) => {
   }
   //upload playermoves
   uploadStageData(storagePlayerUpdate, boxNum);
+ 
 };
 
 export const calculateWin = (player) => {
@@ -193,10 +189,24 @@ export const clickHistory = (e) => {
 }
 
 
+function storageInit() {
+  storage.setItem("playerOne", JSON.stringify([]));
+  storage.setItem("playerTwo", JSON.stringify([]));
+  storage.setItem("board", JSON.stringify([]));
+  storage.setItem("history", JSON.stringify([]));
+  storage.setItem("historyForward", JSON.stringify([]));
+  storage.setItem("boardForward", JSON.stringify([]));
+  storage.setItem("move", 0);
+  storage.setItem('historyForward', JSON.stringify([]))
+  storage.setItem('boardForward', JSON.stringify([]))
+}
+
+
 export const backForwardBtn = (btnClicked) => {
 
   const title = dom.getElementById('title')
   if(title.textContent.includes('Won')) {
+ 
     return
   }
   let history = getStorageData('history')
@@ -229,7 +239,9 @@ export const backForwardBtn = (btnClicked) => {
   if(history.length == 1) {
 
     dom.getElementById(btnClicked).style.visibility = 'hidden'
-    storage.setItem('move',0)
+    dom.getElementById('forwardBtn').style.visibility = 'hidden'
+
+    storageInit()
     return;
   }
 
@@ -255,7 +267,93 @@ export const backForwardBtn = (btnClicked) => {
 
 export const forwardBtnOnly = () => {
 
+  const boardForward = getStorageData('boardForward')
+  const playerForward = getStorageData('historyForward')
+  const history = getStorageData('history')
+  let move = getStorageData('move')
 
-console.log('test')
+
+  let lastPlayer = playerForward[playerForward.length -1]
+  let lastBox = boardForward[boardForward.length -1]
+  let boxPos, boxNum,char,color;
+   
+  
+
+  if(lastBox / 3 < 1) {
+    boxPos = 1;
+  } else if (lastBox / 3 < 2) {
+    boxPos = 2;
+  } else {
+    boxPos = 3;
+  }
+  if(lastBox  < 4) {
+    boxNum = 1;
+  } else if (lastBox < 7) {
+    boxNum = 2;
+  } else {
+    boxNum = 3;
+  }
+
+   playerMoves([boxPos,boxNum],lastPlayer)
+
+  const cell = dom.querySelectorAll('.tictacCell')
+
+  // console.log(move)
+
+  if(move == 1) {
+    char = 'X'
+    move = 2
+    color = 'red'
+  } else {
+    char = 'O'
+    move = '1'
+    color = 'yellow'
+  }
+
+  cell[lastBox-1].style.color = color
+  cell[lastBox-1].textContent = char
+
+  uploadStageData('board',lastBox)
+
+  playerForward.pop()
+  boardForward.pop()
+
+
+  storage.setItem('boardForward',JSON.stringify(boardForward))
+  storage.setItem('historyForward',JSON.stringify(playerForward))
+
+
+  let movePlus;
+
+  if(move == 2) {
+    movePlus = 1;
+  } else {
+    movePlus = 2;
+  }
+
+  history.push(movePlus)
+  storage.setItem('history',JSON.stringify(history))
+
+  storage.setItem('move',move)
+
+  if(playerForward.length < 1) {
+    dom.getElementById('forwardBtn').style.visibility = 'hidden'
+    
+    return
+  }
+
+
+
+ 
+
+  
+
+
+  
+
+  // storage.setItem("history",JSON.stringify(history))
+
 
 }
+
+

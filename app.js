@@ -87,10 +87,11 @@ window.addEventListener("load", () => {
           player += 1;
         }
 
-        storage.setItem('historyForward', JSON.stringify([]))
-        storage.setItem('boardForward', JSON.stringify([]))
+    
 
         dom.getElementById('forwardBtn').style.visibility = 'hidden'
+        storage.setItem("historyForward", JSON.stringify([]));
+        storage.setItem("boardForward", JSON.stringify([]));
 
         if (player % 2 === 0) {
           player = 2;
@@ -124,6 +125,7 @@ window.addEventListener("load", () => {
 
         playerMoves([boxPos, boxNum], player)
         const result = calculateWin(player)
+        console.log(result)
         if (result) {
           let announce;
           if (result.includes('playerOne')) {
@@ -148,13 +150,15 @@ export const playerRestart = () => {
 
   let lastPlayer = getStorageData('history')
   let board = getStorageData('board')
-  let boardFwd = getStorageData('boardForward')
+
   const backed = lastPlayer[lastPlayer.length - 1]
   uploadStageData('historyForward', backed)
 
-  boardFwd = boardFwd.push(board[board.length -1])
-  boardFwd = JSON.stringify(boardFwd)
+
+  let boardFwd = board[board.length -1]
+
   uploadStageData('boardForward', boardFwd)
+  
   lastPlayer.pop()
   board.pop()
   lastPlayer = JSON.stringify(lastPlayer)
