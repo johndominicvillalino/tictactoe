@@ -1,4 +1,4 @@
-import { createDivElements, createDivContainer, playerMoves, calculateWin, createSpan, clickHistory, createButtons, backForwardBtn,forwardBtnOnly } from "./helper.js";
+import { createDivElements, createDivContainer, playerMoves, calculateWin, createSpan, clickHistory, createButtons, backBtnOnly,forwardBtnOnly } from "./helper.js";
 import { uploadStageData, getStorageData } from './util.js'
 
 const dom = document;
@@ -53,7 +53,7 @@ window.addEventListener("load", () => {
     e.addEventListener('click', e => {
       const id = e.target.id
       if (id === 'backBtn') {
-        backForwardBtn(id, player)
+        backBtnOnly(id, player)
       } else {
         forwardBtnOnly()
       }
@@ -76,18 +76,13 @@ window.addEventListener("load", () => {
         return
       } else {
         clickHistory(e)
-
         player = getStorageData('move')
-
         if (dom.getElementById('forwardBtn').style.visibility == 'visible') {
-
         } else {
           player += 1;
         }
 
-    
-
-        dom.getElementById('forwardBtn').style.visibility = 'hidden'
+       dom.getElementById('forwardBtn').style.visibility = 'hidden'
         storage.setItem("historyForward", JSON.stringify([]));
         storage.setItem("boardForward", JSON.stringify([]));
 
@@ -107,14 +102,10 @@ window.addEventListener("load", () => {
 
         uploadStageData('history', player)
 
-       
-
         //stop if winner detected
         if (winner) {
           return
         }
-
-
 
         dom.getElementById(el.target.id).textContent = text
         dom.getElementById(el.target.id).style.color = color
@@ -127,13 +118,14 @@ window.addEventListener("load", () => {
         playerMoves([boxPos, boxNum], player)
         const result = calculateWin(player)
         
-        // console.log(result)
+        //check result
         if (result) {
           let announce;
           if (result.includes('playerOne')) {
             announce = 'Player One Won!'
             dom.getElementById('backBtn').style.visibility = 'hidden'
             dom.getElementById('forwardBtn').style.visibility = 'hidden'
+
           }
           if (result.includes('playerTwo')) {
             announce = 'Player Two Won!'
@@ -142,7 +134,9 @@ window.addEventListener("load", () => {
           }
           titleDiv.innerText = announce
           winner = result
+        
         }
+
         if(draw() == 'tie' && !winner) {
           titleDiv.innerText = 'Tie! Bleeh!'
         }
@@ -181,7 +175,6 @@ export const playerRestart = () => {
 
   const backed = lastPlayer[lastPlayer.length - 1]
   uploadStageData('historyForward', backed)
-
 
   let boardFwd = board[board.length -1]
 

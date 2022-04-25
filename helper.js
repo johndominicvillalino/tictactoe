@@ -202,7 +202,10 @@ function storageInit() {
 }
 
 
-export const backForwardBtn = (btnClicked) => {
+
+
+
+export const backBtnOnly = (btnClicked) => {
 
   const title = dom.getElementById('title')
   if(title.textContent.includes('Won')) {
@@ -236,11 +239,12 @@ export const backForwardBtn = (btnClicked) => {
  
   playerRestart()
 
+
+  //full back clear
   if(history.length == 1) {
 
     dom.getElementById(btnClicked).style.visibility = 'hidden'
     dom.getElementById('forwardBtn').style.visibility = 'hidden'
-
     storageInit()
     return;
   }
@@ -251,13 +255,12 @@ export const backForwardBtn = (btnClicked) => {
     fwd.style.visibility = 'visible'
   }
 
-  const updateMove = historyFwd[historyFwd.length -1];
+  let updateMove = historyFwd[historyFwd.length -1];
+
   
+
   storage.setItem('move',updateMove)
    
-
-
-
 }
 
 
@@ -302,11 +305,11 @@ export const forwardBtnOnly = () => {
 
   if(move == 1) {
     char = 'X'
-    move = 2
+
     color = 'red'
   } else {
     char = 'O'
-    move = '1'
+
     color = 'yellow'
   }
 
@@ -321,16 +324,9 @@ export const forwardBtnOnly = () => {
 
   storage.setItem('boardForward',JSON.stringify(boardForward))
   storage.setItem('historyForward',JSON.stringify(playerForward))
+  
+  history.push(move)
 
-  let movePlus = history[history.length -1]
-
-  if(movePlus == 2) {
-    movePlus = 1
-  } else {
-    movePlus = 2
-  }
-
-  history.push(movePlus)
   storage.setItem('history',JSON.stringify(history))
 
   storage.setItem('move',move)
