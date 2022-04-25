@@ -322,13 +322,12 @@ export const forwardBtnOnly = () => {
   storage.setItem('boardForward',JSON.stringify(boardForward))
   storage.setItem('historyForward',JSON.stringify(playerForward))
 
+  let movePlus = history[history.length -1]
 
-  let movePlus;
-
-  if(move == 2) {
-    movePlus = 1;
+  if(movePlus == 2) {
+    movePlus = 1
   } else {
-    movePlus = 2;
+    movePlus = 2
   }
 
   history.push(movePlus)

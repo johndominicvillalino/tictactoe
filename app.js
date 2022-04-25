@@ -82,7 +82,7 @@ window.addEventListener("load", () => {
         player = getStorageData('move')
 
         if (dom.getElementById('forwardBtn').style.visibility == 'visible') {
-         
+
         } else {
           player += 1;
         }
@@ -125,14 +125,19 @@ window.addEventListener("load", () => {
 
         playerMoves([boxPos, boxNum], player)
         const result = calculateWin(player)
-        console.log(result)
+        
+        // console.log(result)
         if (result) {
           let announce;
           if (result.includes('playerOne')) {
             announce = 'Player One Won!'
+            dom.getElementById('backBtn').style.visibility = 'hidden'
+            dom.getElementById('forwardBtn').style.visibility = 'hidden'
           }
           if (result.includes('playerTwo')) {
             announce = 'Player Two Won!'
+            dom.getElementById('backBtn').style.visibility = 'hidden'
+            dom.getElementById('forwardBtn').style.visibility = 'hidden'
           }
           titleDiv.innerText = announce
           winner = result
