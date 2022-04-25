@@ -72,9 +72,7 @@ window.addEventListener("load", () => {
       const boxPos = el.target.getAttribute("boxpos");
       let color;
 
-   
-
-      if (dom.getElementById(el.target.id).textContent.length > 0) {
+     if (dom.getElementById(el.target.id).textContent.length > 0) {
         return
       } else {
         clickHistory(e)
@@ -109,11 +107,14 @@ window.addEventListener("load", () => {
 
         uploadStageData('history', player)
 
+       
 
         //stop if winner detected
         if (winner) {
           return
         }
+
+
 
         dom.getElementById(el.target.id).textContent = text
         dom.getElementById(el.target.id).style.color = color
@@ -142,13 +143,35 @@ window.addEventListener("load", () => {
           titleDiv.innerText = announce
           winner = result
         }
-
+        if(draw() == 'tie' && !winner) {
+          titleDiv.innerText = 'Tie! Bleeh!'
+        }
       }
+
     });
+
   });
 
   // end on load
 });
+
+function draw() {
+  const cells = dom.querySelectorAll('.tictacCell')
+    const arr = []
+  cells.forEach(e => {
+    
+    if(e.textContent.length > 0) {
+      arr.push(e.textContent)
+    }
+    
+  })
+  if(arr.length == 9) {
+    return 'tie'
+  } else {
+    return undefined
+  }
+}
+
 
 
 export const playerRestart = () => {
