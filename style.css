@@ -29,6 +29,11 @@
 
 }
 
+.newCss {
+    color:red;
+    border: 1px solid black;
+}
+
 #cell1 {
     border-style: none none solid none;
 }
